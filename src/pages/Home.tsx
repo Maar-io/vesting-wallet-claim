@@ -26,7 +26,7 @@ const Home: React.FC = () => {
   }, [isConnected, refreshData]);
 
   // Content for when user is not connected
-  if (!isConnected || !vestingWallet) {
+  if (!isConnected) {
     return (
       <div className="home-container">
         <h1 className="home-title">AstarZkEvm Forgotten Claims</h1>
@@ -48,7 +48,7 @@ const Home: React.FC = () => {
   if (!vestingWallet) {
     return (
       <div className="home-container">
-        <h1 className="home-title">Vesting Wallet Claim</h1>
+        <h1 className="home-title">AstarZkEvm Forgotten Claims</h1>
         <div className="welcome-card">
           <div className="welcome-emoji">🔍</div>
           <h2 className="welcome-heading">No Vesting Wallet Found</h2>
@@ -56,10 +56,6 @@ const Home: React.FC = () => {
             We couldn't find a vesting wallet associated with your address:
           </p>
           <div className="info-field-value">{userAddress}</div>
-          <p className="welcome-text">
-            If you believe this is an error, please ensure you're connected with
-            the correct wallet address.
-          </p>
         </div>
       </div>
     );
@@ -67,7 +63,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-container">
-      <h1 className="home-title">Vesting Wallet Claim</h1>
+      <h1 className="home-title">AstarZkEvm Forgotten Claims</h1>
       <p className="home-description">
         Claim your vested ASTR tokens from your vesting contract
       </p>

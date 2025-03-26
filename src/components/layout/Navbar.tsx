@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { getAssetPath } from "../../utils/assets";
 import "./Navbar.css";
 
 const Navbar: React.FC = () => {
@@ -23,14 +24,13 @@ const Navbar: React.FC = () => {
         <div className="navbar-logo-container">
           <Link to="/" className="navbar-logo">
             <img
-              src="/logo.svg"
+              src={getAssetPath('/logo.svg')}
               alt="AstarZkEvm Forgotten Claims"
-              width="48"
-              height="48"
+              width="72"
+              height="72"
               className="navbar-logo-image"
             />
             <span className="navbar-logo-text">
-              
             </span>
           </Link>
         </div>
