@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useAccount, useReadContract, useWriteContract } from 'wagmi';
+import { useAccount, useReadContract, useWriteContract  } from 'wagmi';
+import { simulateContract  } from '@wagmi/core';
 import { TransactionStatus } from '../types';
 import { YOKI_AIRDROP_ADDRESS, ASTR_TOKEN_ADDRESS, YOKI_AIRDROP_ABI, ERC20_ABI, VESTING_WALLET_ABI } from '../config/contracts';
 import { findVestingWalletFromClaims } from '../utils/helpers';
 import { useCSVData } from './useCSVData';
+import { wagmiConfig } from "../config/wagmi";
 
 export const useVestingWallet = () => {
   const { address: userAddress, isConnected } = useAccount();
@@ -21,7 +23,6 @@ export const useVestingWallet = () => {
     abi: YOKI_AIRDROP_ABI,
     functionName: 'vestingWalletsMap',
     args: [userAddress as `0x${string}`],
-    enabled: Boolean(isConnected && userAddress),
   });
 
   // Read the balance of ASTR tokens in the vesting wallet
@@ -30,7 +31,6 @@ export const useVestingWallet = () => {
     abi: ERC20_ABI,
     functionName: 'balanceOf',
     args: [vestingWallet as `0x${string}`],
-    enabled: Boolean(vestingWallet),
   });
 
   // Prepare the release transaction
@@ -46,7 +46,7 @@ export const useVestingWallet = () => {
     const updateVestingWallet = async () => {
       // First try to get it from the contract
       if (contractVestingWallet && contractVestingWallet !== '0x0000000000000000000000000000000000000000') {
-        setVestingWallet(contractVestingWallet);
+        setVestingWallet(contractVestingWallet as string);
         return;
       }
       
@@ -69,8 +69,8 @@ export const useVestingWallet = () => {
   // Update balance and claiming status
   useEffect(() => {
     if (vestingBalance) {
-      setBalance(vestingBalance);
-      setCanClaim(vestingBalance > 0n);
+      setBalance(typeof vestingBalance === 'bigint' ? vestingBalance : 0n);
+      setCanClaim(typeof vestingBalance === 'bigint' && vestingBalance > 0n);
     } else {
       setBalance(0n);
       setCanClaim(false);
@@ -92,27 +92,28 @@ export const useVestingWallet = () => {
     if (!isConnected || !vestingWallet || !canClaim) {
       return;
     }
-
+  
     try {
       setTxStatus(TransactionStatus.PENDING);
       setTxError(null);
-
-      writeContract({
+  
+      // Simulate the transaction
+      const { request } = await simulateContract(wagmiConfig, {
         address: vestingWallet as `0x${string}`,
         abi: VESTING_WALLET_ABI,
         functionName: 'release',
         args: [ASTR_TOKEN_ADDRESS as `0x${string}`],
-        onSuccess: () => {
-          setTxStatus(TransactionStatus.SUCCESS);
-          // Refresh data after successful transaction
-          setTimeout(() => refreshData(), 2000);
-        },
-        onError: (error) => {
-          setTxStatus(TransactionStatus.ERROR);
-          setTxError(error.message || 'Transaction failed');
-        },
-      });
+      }) ;
+  
+      // Execute
+      const hash = await writeContract(request)   
+
+      // Handle success
+      setTxStatus(TransactionStatus.SUCCESS);
+      setTimeout(() => refreshData(), 2000);
+  
     } catch (error) {
+      // Handle error
       setTxStatus(TransactionStatus.ERROR);
       setTxError(error instanceof Error ? error.message : 'Unknown error occurred');
     }
