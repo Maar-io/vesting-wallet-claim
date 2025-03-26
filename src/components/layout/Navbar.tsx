@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import './Navbar.css';
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import "./Navbar.css";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,8 +12,8 @@ const Navbar: React.FC = () => {
   };
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Dashboard', path: '/dashboard' },
+    { name: "Claim", path: "/" },
+    { name: "Dashboard", path: "/dashboard" },
   ];
 
   return (
@@ -22,7 +22,16 @@ const Navbar: React.FC = () => {
         {/* Logo */}
         <div className="navbar-logo-container">
           <Link to="/" className="navbar-logo">
-            Vesting Wallet
+            <img
+              src="/logo.svg"
+              alt="AstarZkEvm Forgotten Claims"
+              width="48"
+              height="48"
+              className="navbar-logo-image"
+            />
+            <span className="navbar-logo-text">
+              
+            </span>
           </Link>
         </div>
 
@@ -43,7 +52,12 @@ const Navbar: React.FC = () => {
                 stroke="currentColor"
                 aria-hidden="true"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             ) : (
               <svg
@@ -54,7 +68,12 @@ const Navbar: React.FC = () => {
                 stroke="currentColor"
                 aria-hidden="true"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             )}
           </button>
@@ -62,11 +81,11 @@ const Navbar: React.FC = () => {
 
         {/* Desktop menu */}
         <div className="navbar-links">
-          {navLinks.map(link => (
+          {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
-              className={pathname === link.path ? 'active' : ''}
+              className={pathname === link.path ? "active" : ""}
             >
               {link.name}
             </Link>
@@ -80,13 +99,13 @@ const Navbar: React.FC = () => {
       </div>
 
       {/* Mobile menu */}
-      <div className={`navbar-mobile-menu-content ${isMenuOpen ? 'open' : ''}`}>
+      <div className={`navbar-mobile-menu-content ${isMenuOpen ? "open" : ""}`}>
         <div className="navbar-mobile-links">
-          {navLinks.map(link => (
+          {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
-              className={pathname === link.path ? 'active' : ''}
+              className={pathname === link.path ? "active" : ""}
               onClick={() => setIsMenuOpen(false)}
             >
               {link.name}

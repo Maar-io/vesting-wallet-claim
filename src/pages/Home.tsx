@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useAccount } from "wagmi";
 import { ClaimButton } from "../components";
-import { formatTokenAmount } from "../utils/formatters";
+import { formatTokenAmount, formatAddress } from "../utils/formatters";
 import { useVestingWallet } from "../hooks/useVestingWallet";
 import { TransactionStatus } from "../types";
 import "./Home.css";
@@ -26,19 +26,18 @@ const Home: React.FC = () => {
   }, [isConnected, refreshData]);
 
   // Content for when user is not connected
-  if (!isConnected) {
+  if (!isConnected || !vestingWallet) {
     return (
       <div className="home-container">
-        <h1 className="home-title">Vesting Wallet Claim</h1>
+        <h1 className="home-title">AstarZkEvm Forgotten Claims</h1>
         <div className="welcome-card">
           <div className="welcome-emoji">👋</div>
           <h2 className="welcome-heading">Welcome</h2>
           <p className="welcome-text">
-            Connect your wallet to check your vesting status and claim available
-            tokens.
+          Missed out on claiming your ASTR tokens from the AstarZkEVM airdrop? No worries! You can still grab them right here.
           </p>
           <div className="welcome-connect-notice">
-            Please connect your wallet using the button in the top right corner.
+            Please connect your wallet using the button in the top right corner to check eligibility.
           </div>
         </div>
       </div>
@@ -69,70 +68,86 @@ const Home: React.FC = () => {
   return (
     <div className="home-container">
       <h1 className="home-title">Vesting Wallet Claim</h1>
+      <p className="home-description">
+        Claim your vested ASTR tokens from your vesting contract
+      </p>
 
-      <div className="cards-grid">
-        {/* Address Card */}
-        <div className="card">
+      <div className="cards-container">
+        {/* User Info Card */}
+        <div className="card info-card">
           <div className="card-header">
-            <h2 className="card-title">Your Address</h2>
+            <h2 className="card-title">Your Information</h2>
           </div>
           <div className="card-content">
-            <div className="info-value address">
-              {userAddress || ""}
-              <button
-                className="copy-button"
-                onClick={() => navigator.clipboard.writeText(userAddress || "")}
-              >
-                Copy
-              </button>
+            <div className="info-group">
+              <label>Connected Address</label>
+              <div className="info-value address">
+                {formatAddress(userAddress || "")}
+                <button
+                  className="icon-button"
+                  onClick={() => navigator.clipboard.writeText(userAddress || "")}
+                  title="Copy address"
+                >
+                  📋
+                </button>
+                <a
+                  href={`https://astar-zkevm.explorer.startale.com/address/${userAddress}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="icon-button"
+                  title="View in explorer"
+                >
+                  ↗
+                </a>
+              </div>
+            </div>
+            <div className="info-group">
+              <label>Vesting Contract</label>
+              <div className="info-value address">
+                {formatAddress(vestingWallet)}
+                <button
+                  className="icon-button"
+                  onClick={() => navigator.clipboard.writeText(vestingWallet || "")}
+                  title="Copy address"
+                >
+                  📋
+                </button>
+                <a
+                  href={`https://astar-zkevm.explorer.startale.com/address/${vestingWallet}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="icon-button"
+                  title="View in explorer"
+                >
+                  ↗
+                </a>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Vesting Wallet Card */}
-        <div className="card">
-          <div className="card-header">
-            <h2 className="card-title">Vesting Wallet</h2>
-          </div>
-          <div className="card-content">
-            <div className="info-value address">
-              {vestingWallet || ""}
-              <button
-                className="copy-button"
-                onClick={() =>
-                  navigator.clipboard.writeText(vestingWallet || "")
-                }
-              >
-                Copy
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Balance & Claim Card */}
-        <div className="card">
+        {/* Claim Card */}
+        <div className="card claim-card">
           <div className="card-header">
             <h2 className="card-title">Available Balance</h2>
           </div>
           <div className="card-content">
             <div className="balance-display">
-              {formatTokenAmount(balance, 18, "ASTR")}
+              <span className="balance-amount">{formatTokenAmount(balance, 18)}</span>
+              <span className="balance-symbol">ASTR</span>
             </div>
 
             {txStatus === TransactionStatus.SUCCESS && (
               <div className="alert success">
-                <span>✓</span>
-                <p>Your tokens have been successfully claimed.</p>
+                <span className="alert-icon">✓</span>
+                <p>Tokens successfully claimed!</p>
               </div>
             )}
 
             {txStatus === TransactionStatus.ERROR && (
               <div className="alert error">
-                <span>!</span>
-                <p>
-                  {txError ||
-                    "An error occurred while processing your transaction."}
-                </p>
+                <span className="alert-icon">⚠️</span>
+                <p>{txError || "Transaction failed"}</p>
               </div>
             )}
 
@@ -147,7 +162,7 @@ const Home: React.FC = () => {
                 className="secondary-button"
                 disabled={isLoading}
               >
-                {isLoading ? "Refreshing..." : "Refresh Data"}
+                {isLoading ? "Refreshing..." : "Refresh"}
               </button>
             </div>
           </div>
