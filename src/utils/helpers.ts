@@ -1,4 +1,5 @@
-import { ClaimEntry, BalanceEntry } from '../types';
+import { ClaimEntry } from '../types';
+import { BalanceData, ClaimData } from '../types';
 
 /**
  * Checks if an address is a valid Ethereum address
@@ -55,27 +56,25 @@ export const findVestingWalletFromClaims = (
  * @param claimsData Claims data from CSV
  * @returns Object with calculated statistics
  */
-export const calculateDashboardStats = (
-  balancesData: BalanceEntry[],
-  claimsData: ClaimEntry[]
-) => {
-  const totalContracts = claimsData.length;
-  const activeContractCount = balancesData.length;
+export function calculateDashboardStats(balances: BalanceData[], claims: ClaimData[]) {
+  const totalContracts = claims.length;
+  const activeContractCount = balances.length;
   const zeroBalanceCount = totalContracts - activeContractCount;
-  
-  // Calculate total unclaimed amount
-  const totalUnclaimedAmount = balancesData.reduce((sum, entry) => {
-    return sum + BigInt(entry.amount);
-  }, 0n);
-  
+
+  // Parse amounts as BigInt, handling decimals by removing them
+  const totalUnclaimedAmount = balances.reduce((sum, balance) => {
+    // Remove decimals and convert to BigInt
+    const amountStr = balance.amount.split('.')[0];
+    return sum + BigInt(amountStr);
+  }, BigInt(0));
+
   return {
     totalContracts,
-    zeroBalanceCount,
     activeContractCount,
-    totalUnclaimedAmount: totalUnclaimedAmount.toString(),
-    lastUpdated: new Date()
+    zeroBalanceCount,
+    totalUnclaimedAmount
   };
-};
+}
 
 /**
  * Handles errors and extracts readable messages
@@ -86,3 +85,4 @@ export const getErrorMessage = (error: unknown): string => {
   if (error instanceof Error) return error.message;
   return String(error);
 };
+

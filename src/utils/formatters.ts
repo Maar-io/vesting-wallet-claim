@@ -34,30 +34,33 @@ export const formatNumber = (value: number | bigint, decimals = 2): string => {
  * @param symbol Token symbol to append (optional)
  * @returns Formatted token amount as a string
  */
-export const formatTokenAmount = (
-  amount: bigint, 
-  decimals = 18, 
-  symbol?: string
-): string => {
-  if (amount === 0n) return symbol ? `0 ${symbol}` : '0';
-  
-  const divisor = 10n ** BigInt(decimals);
-  const integerPart = amount / divisor;
-  const fractionalPart = amount % divisor;
-  
-  // Convert fractional part to a string and pad with leading zeros
-  let fractionalStr = fractionalPart.toString().padStart(decimals, '0');
-  
-  // Trim trailing zeros
-  fractionalStr = fractionalStr.replace(/0+$/, '');
-  
-  // Format the final string
-  const result = fractionalStr 
-    ? `${integerPart}.${fractionalStr.substring(0, 4)}` 
-    : `${integerPart}`;
+export function formatTokenAmount(amount: bigint, decimals: number = 18, symbol?: string): string {
+  try {
+    // For ASTR, we don't need to handle decimals as amounts are in whole tokens
+    const formatted = amount.toString();
+    return symbol ? `${formatted} ${symbol}` : formatted;
+  } catch (error) {
+    console.error('Error formatting token amount:', amount, error);
+    return '0';
+  }
+}
+
+export function parseTokenAmount(amount: string): bigint {
+  try {
+    // Remove any existing decimals as we'll normalize to 18 decimals
+    const cleanAmount = amount.replace(/[^0-9.]/g, '');
+    const [integerPart, decimalPart = ''] = cleanAmount.split('.');
     
-  return symbol ? `${result} ${symbol}` : result;
-};
+    // Handle the case where the amount is just a decimal (e.g., ".5")
+    const normalizedInteger = integerPart || '0';
+    
+    // Don't pad decimals for ASTR as it's already in the correct format
+    return BigInt(normalizedInteger);
+  } catch (error) {
+    console.error('Error parsing token amount:', amount, error);
+    return BigInt(0);
+  }
+}
 
 /**
  * Formats a date to a readable string

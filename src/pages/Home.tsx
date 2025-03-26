@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { useAccount } from 'wagmi';
-import { ClaimButton } from '../components';
-import { formatAddress, formatTokenAmount } from '../utils/formatters';
-import { useVestingWallet } from '../hooks/useVestingWallet';
-import { TransactionStatus } from '../types';
-import './Home.css';
+import React, { useEffect } from "react";
+import { useAccount } from "wagmi";
+import { ClaimButton } from "../components";
+import { formatAddress, formatTokenAmount } from "../utils/formatters";
+import { useVestingWallet } from "../hooks/useVestingWallet";
+import { TransactionStatus } from "../types";
+import "./Home.css";
 
 const Home: React.FC = () => {
   const { isConnected } = useAccount();
@@ -34,7 +34,8 @@ const Home: React.FC = () => {
           <div className="welcome-emoji">👋</div>
           <h2 className="welcome-heading">Welcome</h2>
           <p className="welcome-text">
-            Connect your wallet to check your vesting status and claim available tokens.
+            Connect your wallet to check your vesting status and claim available
+            tokens.
           </p>
           <div className="welcome-connect-notice">
             Please connect your wallet using the button in the top right corner.
@@ -55,11 +56,10 @@ const Home: React.FC = () => {
           <p className="welcome-text">
             We couldn't find a vesting wallet associated with your address:
           </p>
-          <div className="info-field-value">
-            {userAddress}
-          </div>
+          <div className="info-field-value">{userAddress}</div>
           <p className="welcome-text">
-            If you believe this is an error, please ensure you're connected with the correct wallet address.
+            If you believe this is an error, please ensure you're connected with
+            the correct wallet address.
           </p>
         </div>
       </div>
@@ -69,65 +69,89 @@ const Home: React.FC = () => {
   return (
     <div className="home-container">
       <h1 className="home-title">Vesting Wallet Claim</h1>
-      
-      {/* User Info Card */}
-      <div className="info-card">
-        <h2 className="info-card-title">Your Vesting Information</h2>
-        
-        <div className="info-field">
-          <p className="info-field-label">Your Address</p>
-          <p className="info-field-value">{userAddress}</p>
-        </div>
-        
-        <div className="info-field">
-          <p className="info-field-label">Vesting Wallet</p>
-          <p className="info-field-value">{vestingWallet}</p>
-        </div>
-        
-        <div className="info-field">
-          <p className="info-field-label">Available Balance</p>
-          <p className="balance-value">
-            {formatTokenAmount(balance, 18, 'ASTR')}
-          </p>
-        </div>
-      </div>
-      
-      {/* Claim Card */}
-      <div className="info-card">
-        <h2 className="info-card-title">Claim Tokens</h2>
-        
-        {txStatus === TransactionStatus.SUCCESS && (
-          <div className="transaction-success">
-            <div className="font-medium">Success!</div>
-            <p>Your tokens have been successfully claimed.</p>
+
+      <div className="cards-grid">
+        {/* Address Card */}
+        <div className="card">
+          <div className="card-header">
+            <h2 className="card-title">Your Address</h2>
           </div>
-        )}
-        
-        {txStatus === TransactionStatus.ERROR && (
-          <div className="transaction-error">
-            <div className="font-medium">Error</div>
-            <p>{txError || 'An error occurred while processing your transaction.'}</p>
+          <div className="card-content">
+            <div className="info-value address">
+              {userAddress || ""}
+              <button
+                className="copy-button"
+                onClick={() => navigator.clipboard.writeText(userAddress || "")}
+              >
+                Copy
+              </button>
+            </div>
           </div>
-        )}
-        
-        {!canClaim && (
-          <div className="no-tokens-notice">
-            <p>You don't have any tokens available to claim at the moment.</p>
+        </div>
+
+        {/* Vesting Wallet Card */}
+        <div className="card">
+          <div className="card-header">
+            <h2 className="card-title">Vesting Wallet</h2>
           </div>
-        )}
-        
-        <ClaimButton
-          disabled={!canClaim}
-          onClick={claim}
-          isLoading={isLoading || txStatus === TransactionStatus.PENDING}
-        />
-        
-        <button
-          onClick={refreshData}
-          className="refresh-button"
-        >
-          Refresh Data
-        </button>
+          <div className="card-content">
+            <div className="info-value address">
+              {vestingWallet || ""}
+              <button
+                className="copy-button"
+                onClick={() =>
+                  navigator.clipboard.writeText(vestingWallet || "")
+                }
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Balance & Claim Card */}
+        <div className="card">
+          <div className="card-header">
+            <h2 className="card-title">Available Balance</h2>
+          </div>
+          <div className="card-content">
+            <div className="balance-display">
+              {formatTokenAmount(balance, 18, "ASTR")}
+            </div>
+
+            {txStatus === TransactionStatus.SUCCESS && (
+              <div className="alert success">
+                <span>✓</span>
+                <p>Your tokens have been successfully claimed.</p>
+              </div>
+            )}
+
+            {txStatus === TransactionStatus.ERROR && (
+              <div className="alert error">
+                <span>!</span>
+                <p>
+                  {txError ||
+                    "An error occurred while processing your transaction."}
+                </p>
+              </div>
+            )}
+
+            <div className="actions">
+              <ClaimButton
+                disabled={!canClaim}
+                onClick={claim}
+                isLoading={isLoading || txStatus === TransactionStatus.PENDING}
+              />
+              <button
+                onClick={refreshData}
+                className="secondary-button"
+                disabled={isLoading}
+              >
+                {isLoading ? "Refreshing..." : "Refresh Data"}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

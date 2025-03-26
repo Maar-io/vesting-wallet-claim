@@ -7,15 +7,6 @@ export interface AppState {
   canClaim: boolean;
 }
 
-// Dashboard statistics types
-export interface DashboardStats {
-  totalContracts: number;
-  zeroBalanceCount: number;
-  activeContractCount: number;
-  totalUnclaimedAmount: string;
-  lastUpdated: Date;
-}
-
 // CSV data types
 export interface ClaimEntry {
   account: string;
@@ -49,4 +40,22 @@ export interface ClaimButtonProps {
   disabled: boolean;
   onClick: () => void;
   isLoading: boolean;
+}
+
+export interface ClaimData extends Record<string, string> {
+  account: string;
+  vestingWallet: string;
+  amount: string;
+}
+
+export interface BalanceData extends Record<string, string> {
+  vestingWallet: string;
+  amount: string;
+}
+
+export interface DashboardStats {
+  totalContracts: number;
+  activeContractCount: number;
+  zeroBalanceCount: number;
+  totalUnclaimedAmount: bigint;
 }

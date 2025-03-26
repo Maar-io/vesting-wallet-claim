@@ -1,82 +1,47 @@
-import { useState, useEffect, useCallback } from 'react';
-import Papa from 'papaparse';
-import { ClaimEntry, BalanceEntry } from '../types';
-
+import { useState, useEffect } from 'react';;
+import { BalanceData, ClaimData } from '../types';
 /**
  * Custom hook to fetch and parse CSV data
  */
-export const useCSVData = () => {
-  const [claimsData, setClaimsData] = useState<ClaimEntry[]>([]);
-  const [balancesData, setBalancesData] = useState<BalanceEntry[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+export function useCSVData() {
+  const [claimsData, setClaimsData] = useState<ClaimData[]>([]);
+  const [balancesData, setBalancesData] = useState<BalanceData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
-  /**
-   * Fetches and parses a CSV file
-   * @param url URL of the CSV file to fetch
-   * @returns Parsed CSV data as an array of objects
-   */
-  const fetchCSV = async <T>(url: string): Promise<T[]> => {
+  const loadCSVData = async () => {
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-      }
+      setIsLoading(true);
       
-      const csvText = await response.text();
+      // Load claims.csv with type assertion
+      const claimsResponse = await fetch('/data/claims.csv');
+      const claimsText = await claimsResponse.text();
+      const claimsParsed = parseCSV<ClaimData>(claimsText);
       
-      return new Promise((resolve, reject) => {
-        Papa.parse(csvText, {
-          header: true,
-          skipEmptyLines: true,
-          dynamicTyping: true,
-          complete: (results) => {
-            resolve(results.data as T[]);
-          },
-          error: (error) => {
-            reject(new Error(`CSV parsing error: ${error}`));
-          }
-        });
-      });
-    } catch (err) {
-      throw new Error(`Error fetching CSV: ${err instanceof Error ? err.message : String(err)}`);
-    }
-  };
+      // Load non_zero_balances.csv with type assertion
+      const balancesResponse = await fetch('/data/non_zero_balances.csv');
+      const balancesText = await balancesResponse.text();
+      const balancesParsed = parseCSV<BalanceData>(balancesText);
 
-  /**
-   * Refreshes all CSV data
-   */
-  const refreshData = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      // Fetch both CSVs in parallel
-      const [claims, balances] = await Promise.all([
-        fetchCSV<ClaimEntry>('/claims.csv'),
-        fetchCSV<BalanceEntry>('/non_zero_balances.csv')
-      ]);
-      
-      setClaimsData(claims);
-      setBalancesData(balances);
+      setClaimsData(claimsParsed);
+      setBalancesData(balancesParsed);
       setLastUpdated(new Date());
+      setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  useEffect(() => {
+    loadCSVData();
   }, []);
 
-  // Initial data load
-  useEffect(() => {
-    refreshData();
-    
-    // Set up auto-refresh every 5 minutes
-    const intervalId = setInterval(refreshData, 5 * 60 * 1000);
-    
-    return () => clearInterval(intervalId);
-  }, [refreshData]);
+  const refreshData = () => {
+    loadCSVData();
+  };
 
   return {
     claimsData,
@@ -86,4 +51,31 @@ export const useCSVData = () => {
     lastUpdated,
     refreshData
   };
-};
+}
+
+
+function parseCSV<T extends Record<string, string>>(csv: string): T[] {
+  const [headers, ...rows] = csv.trim().split('\n');
+  const headerColumns = headers.split(',');
+  
+  return rows.map(row => {
+    const values = row.split(',');
+    const parsedRow = headerColumns.reduce((obj, header, index) => {
+      obj[header.trim()] = values[index].trim();
+      return obj;
+    }, {} as Record<string, string>);
+
+    // Validate the required fields based on type
+    const isClaimData = 'account' in parsedRow && 
+                       'vestingWallet' in parsedRow && 
+                       'amount' in parsedRow;
+    const isBalanceData = 'vestingWallet' in parsedRow && 
+                         'amount' in parsedRow;
+
+    if (!isClaimData && !isBalanceData) {
+      throw new Error('Invalid CSV format: missing required fields');
+    }
+
+    return parsedRow as T;
+  });
+}
