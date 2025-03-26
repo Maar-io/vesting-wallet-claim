@@ -2,10 +2,13 @@
   "name": "vesting-wallet-claim",
   "version": "1.0.0",
   "main": "index.js",
+  "homepage": "https://maar-io.github.io/vesting-wallet-claim",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +20,6 @@
     "@tanstack/react-query": "^5.69.0",
     "csv-parser": "^3.2.0",
     "ethers": "^6.13.5",
-    "papaparse": "^5.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.4.0",
@@ -29,6 +31,7 @@
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
+    "gh-pages": "^6.3.0",
     "typescript": "^5.8.2",
     "vite": "^6.2.3"
   }

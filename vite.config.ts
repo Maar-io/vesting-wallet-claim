@@ -18,4 +18,5 @@ export default defineConfig({
   build: {
     target: 'es2020',
   },
+  base: '/vesting-wallet-claim/',
 })
