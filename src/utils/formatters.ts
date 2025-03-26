@@ -34,7 +34,7 @@ export const formatNumber = (value: number | bigint, decimals = 2): string => {
  * @param symbol Token symbol to append (optional)
  * @returns Formatted token amount as a string
  */
-export function formatTokenAmount(amount: bigint, decimals: number = 18, symbol?: string): string {
+export function formatTokenAmount(amount: bigint, _decimals: number = 18, symbol?: string): string {
   try {
     // For ASTR, we don't need to handle decimals as amounts are in whole tokens
     const formatted = amount.toString();
@@ -49,7 +49,7 @@ export function parseTokenAmount(amount: string): bigint {
   try {
     // Remove any existing decimals as we'll normalize to 18 decimals
     const cleanAmount = amount.replace(/[^0-9.]/g, '');
-    const [integerPart, decimalPart = ''] = cleanAmount.split('.');
+    const [integerPart] = cleanAmount.split('.');
     
     // Handle the case where the amount is just a decimal (e.g., ".5")
     const normalizedInteger = integerPart || '0';

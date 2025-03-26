@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useAccount } from "wagmi";
 import { ClaimButton } from "../components";
-import { formatAddress, formatTokenAmount } from "../utils/formatters";
+import { formatTokenAmount } from "../utils/formatters";
 import { useVestingWallet } from "../hooks/useVestingWallet";
 import { TransactionStatus } from "../types";
 import "./Home.css";

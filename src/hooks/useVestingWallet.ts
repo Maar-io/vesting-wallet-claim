@@ -106,7 +106,7 @@ export const useVestingWallet = () => {
       }) ;
   
       // Execute
-      const hash = await writeContract(request)   
+      await writeContract(request)   
 
       // Handle success
       setTxStatus(TransactionStatus.SUCCESS);
