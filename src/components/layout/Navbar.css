@@ -1,0 +1,123 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  box-shadow: var(--shadow-sm);
+  height: 4rem;
+  z-index: 10;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  max-width: var(--max-width-lg);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.navbar-logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-links {
+  display: none;
+}
+
+.navbar-links a {
+  margin: 0 1rem;
+  color: var(--gray-600);
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius);
+}
+
+.navbar-links a:hover {
+  color: var(--gray-900);
+  background-color: var(--gray-50);
+}
+
+.navbar-links a.active {
+  color: var(--primary-color);
+  background-color: var(--primary-light);
+}
+
+.navbar-mobile-menu {
+  display: block;
+  margin-right: 1rem;
+}
+
+.navbar-mobile-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--gray-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.navbar-mobile-menu-content {
+  display: none;
+  position: absolute;
+  top: 4rem;
+  left: 0;
+  right: 0;
+  background-color: white;
+  box-shadow: var(--shadow-md);
+  border-bottom-left-radius: var(--border-radius-lg);
+  border-bottom-right-radius: var(--border-radius-lg);
+}
+
+.navbar-mobile-menu-content.open {
+  display: block;
+}
+
+.navbar-mobile-links {
+  padding: 0.5rem 0;
+}
+
+.navbar-mobile-links a {
+  display: block;
+  padding: 0.75rem 1.5rem;
+  color: var(--gray-700);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.navbar-mobile-links a:hover {
+  background-color: var(--gray-50);
+}
+
+.navbar-mobile-links a.active {
+  color: var(--primary-color);
+  background-color: var(--gray-50);
+}
+
+.navbar-connect-btn {
+  margin-left: 1rem;
+}
+
+/* Media Queries */
+@media (min-width: 768px) {
+  .navbar-links {
+    display: flex;
+  }
+  
+  .navbar-mobile-menu {
+    display: none;
+  }
+}

@@ -1,0 +1,118 @@
+.home-container {
+  max-width: var(--max-width-md);
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.home-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.welcome-card {
+  background-color: white;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.welcome-emoji {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.welcome-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-text {
+  color: var(--gray-600);
+  margin-bottom: 1.5rem;
+}
+
+.welcome-connect-notice {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+  padding: 1rem;
+  border-radius: var(--border-radius-lg);
+}
+
+.info-card {
+  background-color: white;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.info-field {
+  margin-bottom: 1rem;
+}
+
+.info-field-label {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+  margin-bottom: 0.25rem;
+}
+
+.info-field-value {
+  background-color: var(--gray-50);
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  font-family: monospace;
+}
+
+.balance-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.transaction-success {
+  background-color: #D1FAE5;
+  color: var(--success-color);
+  padding: 1rem;
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 1rem;
+}
+
+.transaction-error {
+  background-color: #FEE2E2;
+  color: var(--error-color);
+  padding: 1rem;
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 1rem;
+}
+
+.no-tokens-notice {
+  background-color: var(--gray-50);
+  color: var(--gray-700);
+  padding: 1rem;
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 1rem;
+}
+
+.refresh-button {
+  display: block;
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  margin: 1rem auto 0;
+}
+
+.refresh-button:hover {
+  text-decoration: underline;
+}

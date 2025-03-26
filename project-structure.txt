@@ -1,0 +1,40 @@
+```
+vesting-wallet-claim/
+├── public/
+│   ├── claims.csv              # CSV with claims data
+│   ├── non_zero_balances.csv   # CSV with non-zero balances
+│   └── favicon.ico
+├── src/
+│   ├── assets/
+│   │   └── logo.svg
+│   ├── components/
+│   │   ├── layout/
+│   │   │   ├── Navbar.tsx
+│   │   │   └── Layout.tsx
+│   │   ├── ui/
+│   │   │   ├── ConnectButton.tsx
+│   │   │   ├── StatCard.tsx
+│   │   │   └── ClaimButton.tsx
+│   │   └── index.ts
+│   ├── pages/
+│   │   ├── Home.tsx
+│   │   └── Dashboard.tsx
+│   ├── hooks/
+│   │   ├── useVestingWallet.ts
+│   │   └── useCSVData.ts
+│   ├── config/
+│   │   ├── contracts.ts
+│   │   └── networks.ts
+│   ├── utils/
+│   │   ├── formatters.ts
+│   │   └── helpers.ts
+│   ├── types/
+│   │   └── index.ts
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css
+├── .gitignore
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```

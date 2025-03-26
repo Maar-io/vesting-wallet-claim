@@ -1,0 +1,26 @@
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-color);
+}
+
+.layout-main {
+  flex: 1;
+  padding-top: 4rem; /* Space for fixed navbar */
+  padding-bottom: 2rem;
+  width: 100%;
+}
+
+.layout-footer {
+  background-color: white;
+  padding: 1rem 0;
+  text-align: center;
+  border-top: 1px solid var(--gray-200);
+}
+
+.footer-content {
+  max-width: var(--max-width-lg);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
